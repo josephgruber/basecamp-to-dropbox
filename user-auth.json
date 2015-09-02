@@ -1,0 +1,5 @@
+{
+    "dropbox_access_token": "INSERT_DROPBOX_TOKEN",
+    "basecamp_username": "INSERT_BASECAMP_USERNAME",
+    "basecamp_password": "INSERT_BASECAMP_PASSWORD"
+}
