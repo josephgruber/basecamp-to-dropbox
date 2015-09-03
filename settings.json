@@ -1,0 +1,15 @@
+{
+    "basecamp_username": "",
+    "basecamp_password": "",
+    "basecamp_id": "",
+    "basecamp_project_id": "",
+    "basecamp_useragent_email": "",
+    "exception_email_to": "",
+    "exception_email_from": "",
+    "smtp_server": "",
+    "smtp_port": "",
+    "smtp_username": "",
+    "smtp_password": "",
+    "dropbox_path": "",
+    "dropbox_access_token": ""
+}
