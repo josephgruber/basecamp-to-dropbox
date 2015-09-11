@@ -4,6 +4,7 @@
     "basecamp_id": "",
     "basecamp_project_id": "",
     "basecamp_useragent_email": "",
+    "basecamp_crew_ids": "",
     "exception_email_to": "",
     "exception_email_from": "",
     "smtp_server": "",

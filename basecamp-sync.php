@@ -170,6 +170,7 @@ if ($last_run > time()) {
 
 // Retrieve application settings
 $settings = loadSettings();
+$crew_ids = explode(',', $settings->basecamp_crew_ids);
 
 // Clear any existing files in the temporary Directory
 clear_temporary_directory();
@@ -194,6 +195,10 @@ save_last_run_time();
 // Loop through attachments JSON array, check if attachment has been created after the last run time and if so
 // download from Basecamp and upload to Dropbox
 foreach($attachmentJsonArr as $attachmentArr){
+  if (in_array($attachmentArr['creator']['id'], $crew_ids)) {
+    continue; // Skip the attachment if it was originally uploaded by a member of the crew
+  }
+
   if ($last_run < strtotime($attachmentArr['created_at'])) {
     $basecamp_result = download_from_basecamp($attachmentArr['url'], $attachmentArr['name'], $settings->basecamp_username,
                                               $settings->basecamp_password, $settings->basecamp_useragent_email);
