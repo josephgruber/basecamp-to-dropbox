@@ -1,0 +1,43 @@
+Usage:
+1. Create a Dropbox app at https://www.dropbox.com/developers/apps. Place the API key and secret in the
+    dropbox-app-inf.json file
+2. Run 'php dropbox-authorize.php'. Allow access using your Dropbox user account and save the access token
+    to 'dropbox_access_token' in settings.json
+3. Update the following settings in settings.json
+    - basecamp_username: The e-mail address used to log in to Basecamp
+    - basecamp_password: The password associated with basecamp_username
+    - basecamp_id: The set of numbers in the URL when you view the list of projects
+                   (e.g. https://basecamp.com/123456789/ would have a Basecamp ID of 123456789)
+    - basecamp_project_id: The set of numbers in the URL when you view the specific project
+                   (e.g. https://basecamp.com/123456789/projects/987654321 would have a Project ID of 987654321)
+    - basecamp_useragent_email: The e-mail address for Basecamp to use to contact for any issues
+    - basecamp_crew_ids: A comma-seperated list of Basecamp IDs for the crew
+    - exception_email_to: The email address that errors and alerts should be sent to
+    - exception_email_from: The email address that error and alert emails should appear from
+                            (usually same as exception_email_to)
+    - smtp_server: The SMTP server used to send error and alert e-mails. For Google, ssl://smtp.gmail.com
+    - smtp_port: The SMTP server port to be used. For Google, 465
+    - smtp_username: The username used to authenticate to the SMTP server. For Google, your Gmail address
+    - smtp_password: The password associated with smtp_username
+    - dropbox_path: The path, with a leading forward slash, on Dropbox where uploads should be placed
+4. Either run manually 'php basecamp-sync.php' or create a scheduled (e.g. cron, launchd) job to schedule the script
+
+Debug Mode:
+To run the Basecamp Sync script in debug mode, simply run 'php basecamp-sync.php debug'
+
+Recovering From An Error:
+If an error is encountered, the script will output the error to the local console as well as e-mail the error using
+the settings from settings.json. Once an error is encountered, a future date is placed into last_run to prevent the
+script from running again until the error is resolved. Once the error is resolved, delete the value in last_run and
+replace it with a UNIX timestamp representing the time the error occurred. A good website to create a UNIX timestamp
+based upon a specific date and time is http://www.onlineconversion.com/unix_time.htm
+
+Log:
+All uploads downloaded from Basecamp and placed on Dropbox are located in log.txt
+
+Version History:
+v1.0 (03-Sep-2015)
+    - Initial Release
+v1.1 (11-Sep-2015)
+    - Ignore Basecamp uploads by the crew. Added setting to include comma-separated value of crew Basecamp ID's (9260537)
+    - Send If-Modified-Since header using last_run time to Basecamp to lessen load on server and bandwidth (8c54acf)
