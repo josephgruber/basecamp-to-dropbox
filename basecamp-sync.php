@@ -57,10 +57,10 @@ function loadSettings() {
   return $jsonArr;
 }
 
-function get_attachments_list($username, $password, $basecamp_id, $basecamp_project_id, $basecamp_useragent_email) {
+function get_attachments_list($username, $password, $basecamp_id, $basecamp_project_id, $basecamp_useragent_email, $last_run) {
   $handle = curl_init("https://basecamp.com/" . $basecamp_id . "/api/v1/projects/" . $basecamp_project_id . "/attachments.json");
 
-  curl_setopt($handle, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
+  curl_setopt($handle, CURLOPT_HTTPHEADER, array("Content-Type: application/json","If-Modified-Since: " . gmdate('D, d M Y H:i:s T', $last_run)));
   curl_setopt($handle, CURLOPT_USERPWD, $username . ":" . $password);
   curl_setopt($handle, CURLOPT_USERAGENT, "HI-SEAS (" . $basecamp_useragent_email . ")");
   curl_setopt($handle, CURLOPT_RETURNTRANSFER, 1);
@@ -73,6 +73,9 @@ function get_attachments_list($username, $password, $basecamp_id, $basecamp_proj
   if ($info["http_code"] == 200) {
     $result = json_decode($result, true);
     return $result;
+  } elseif ($info["http_code"] == 304) { // The attachments.json has not been modified since last run, save run time & exit.
+    save_last_run_time();
+    exit();
   } else {
     throw new \Exception("Unable to retrieve list of attachments from Basecamp", $info["http_code"]);
   }
@@ -187,7 +190,7 @@ $dbxClient = new dbx\Client($settings->dropbox_access_token, "HI-SEAS - Basecamp
 
 // Retrieve latest list of attachments on Basecamp project
 $attachmentJsonArr = get_attachments_list($settings->basecamp_username, $settings->basecamp_password, $settings->basecamp_id,
-                                          $settings->basecamp_project_id, $settings->basecamp_useragent_email);
+                                          $settings->basecamp_project_id, $settings->basecamp_useragent_email, $last_run);
 
 // Save the last run time of the Basecamp Sync Client immediately after retrieving latest attachments list
 save_last_run_time();
