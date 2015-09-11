@@ -11,6 +11,7 @@ Usage:
     - basecamp_project_id: The set of numbers in the URL when you view the specific project
                    (e.g. https://basecamp.com/123456789/projects/987654321 would have a Project ID of 987654321)
     - basecamp_useragent_email: The e-mail address for Basecamp to use to contact for any issues
+    - basecamp_crew_ids: A comma-seperated list of Basecamp IDs for the crew
     - exception_email_to: The email address that errors and alerts should be sent to
     - exception_email_from: The email address that error and alert emails should appear from
                             (usually same as exception_email_to)
@@ -33,3 +34,10 @@ based upon a specific date and time is http://www.onlineconversion.com/unix_time
 
 Log:
 All uploads downloaded from Basecamp and placed on Dropbox are located in log.txt
+
+Version History:
+v1.0 (03-Sep-2015)
+    - Initial Release
+v1.1 (11-Sep-2015)
+    - Ignore Basecamp uploads by the crew. Added setting to include comma-separated value of crew Basecamp ID's (9260537)
+    - Send If-Modified-Since header using last_run time to Basecamp to lessen load on server and bandwidth (8c54acf)
