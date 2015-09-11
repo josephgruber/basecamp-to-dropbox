@@ -178,6 +178,13 @@ $crew_ids = explode(',', $settings->basecamp_crew_ids);
 // Clear any existing files in the temporary Directory
 clear_temporary_directory();
 
+// Retrieve latest list of attachments on Basecamp project
+$attachmentJsonArr = get_attachments_list($settings->basecamp_username, $settings->basecamp_password, $settings->basecamp_id,
+                                          $settings->basecamp_project_id, $settings->basecamp_useragent_email, $last_run);
+
+// Save the last run time of the Basecamp Sync Client immediately after retrieving latest attachments list
+save_last_run_time();
+
 // Load Dropbox API keys
 try {
   $appInfo = dbx\AppInfo::loadFromJsonFile(dirname(__FILE__) . "/dropbox-app-info.json");
@@ -187,13 +194,6 @@ try {
 
 // Create Dropbox client
 $dbxClient = new dbx\Client($settings->dropbox_access_token, "HI-SEAS - Basecamp Sync");
-
-// Retrieve latest list of attachments on Basecamp project
-$attachmentJsonArr = get_attachments_list($settings->basecamp_username, $settings->basecamp_password, $settings->basecamp_id,
-                                          $settings->basecamp_project_id, $settings->basecamp_useragent_email, $last_run);
-
-// Save the last run time of the Basecamp Sync Client immediately after retrieving latest attachments list
-save_last_run_time();
 
 // Loop through attachments JSON array, check if attachment has been created after the last run time and if so
 // download from Basecamp and upload to Dropbox
